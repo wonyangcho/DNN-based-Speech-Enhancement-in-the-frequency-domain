@@ -244,3 +244,7 @@ for idx, f in enumerate(tqdm(wavfiles_raw)):
 print(train_audio_data.shape)
 print(val_audio_data.shape)
 print(test_audio_data.shape)
+
+np.save('./train.npy', train_audio_data)
+np.save('./val.npy', val_audio_data)
+np.save('./test.npy', test_audio_data)
