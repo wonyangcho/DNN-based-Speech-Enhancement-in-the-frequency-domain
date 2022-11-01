@@ -13,7 +13,7 @@ import config as cfg
 ############################################################################
 #                                   MOS                                    #
 ############################################################################
-# Reference 
+# Reference
 # https://github.com/usimarit/semetrics # https://ecs.utdallas.edu/loizou/speech/software.htm
 logging.basicConfig(level=logging.ERROR)
 oc = oct2py.Oct2Py(logger=logging.getLogger())
@@ -34,7 +34,7 @@ def composite(clean: str, enhanced: str):
 #                                   PESQ                                   #
 ############################################################################
 # Reference
-# https://github.com/usimarit/semetrics 
+# https://github.com/usimarit/semetrics
 # https://ecs.utdallas.edu/loizou/speech/software.htm
 
 def pesq_mos(clean: str, enhanced: str):
@@ -68,16 +68,11 @@ def run_pesq_filenames(clean, to_eval):
 def run_pesq_waveforms(dirty_wav, clean_wav):
     clean_wav = clean_wav.astype(np.double)
     dirty_wav = dirty_wav.astype(np.double)
-
-    return pesq(clean_wav, dirty_wav, mode='nb', fs=8000)
-
-    #수정 아래 내용
-
+    return pesq(ref=clean_wav, deg=dirty_wav, mode='nb', fs=8000)
     # return pesq_dll.pesq(ctypes.c_void_p(clean_wav.ctypes.data),
     #                      ctypes.c_void_p(dirty_wav.ctypes.data),
     #                      len(clean_wav),
     #                      len(dirty_wav))
-
 
 
 # interface to PESQ evaluation, taking in two waveforms as input
