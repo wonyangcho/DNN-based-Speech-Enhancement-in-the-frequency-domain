@@ -11,8 +11,7 @@ from scipy.signal import butter, lfilter
 from glob import glob
 import random
 from tqdm import tqdm
-from torchmetrics.audio.pesq import PerceptualEvaluationSpeechQuality
-import torch
+from pesq import pesq
 
 
 source_data_dir_raw = "raw/audio_txt_files/"
@@ -228,8 +227,7 @@ for idx, f in enumerate(tqdm(wavfiles_raw)):
         clean_wav = wav_data.astype(np.double)
 
         try:
-            nb_pesq = PerceptualEvaluationSpeechQuality(8000, 'nb')
-            nb_pesq(torch.from_numpy(clean_wav), torch.from_numpy(clean_wav)).item()
+            pesq(ref=clean_wav, deg=clean_wav, mode='nb', fs=sample_rate)
         except Exception as e:
             print(f"{e}")
             del split_data[i]
