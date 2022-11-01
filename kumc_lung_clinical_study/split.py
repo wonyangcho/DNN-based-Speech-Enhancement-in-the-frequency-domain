@@ -11,6 +11,10 @@ from scipy.signal import butter, lfilter
 from glob import glob
 import random
 from tqdm import tqdm
+from torchmetrics.audio.pesq import PerceptualEvaluationSpeechQuality
+import torch
+
+
 source_data_dir_raw = "./raw/audio_txt_files/"
 noise_data_dir_raw = "./noise/"
 target_dir = "./processed/"
@@ -217,6 +221,19 @@ for idx, f in enumerate(tqdm(wavfiles_raw)):
     sample, rate = librosa.load(f, sr=sample_rate)
     sample = butter_bandpass_filter(sample, fs=rate, lowcut=lf, highcut=hf)
     split_data = split_and_pad([sample], desired_length, sample_rate)
+
+
+    for i in range(len(split_data)-1,0,-1):
+        wav_data = split_data[i]
+        clean_wav = wav_data.astype(np.double)
+
+        try:
+            nb_pesq = PerceptualEvaluationSpeechQuality(8000, 'nb')
+            nb_pesq(torch.from_numpy(clean_wav), torch.from_numpy(clean_wav)).item()
+        except Exception as e:
+            print(f"{e}")
+            del split_data[i]
+
 
     input_target = np.array(split_data)
     input_target = np.expand_dims(input_target, axis=1)
