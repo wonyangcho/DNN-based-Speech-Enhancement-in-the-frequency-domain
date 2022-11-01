@@ -79,8 +79,11 @@ def run_pesq_waveforms(dirty_wav, clean_wav):
 def cal_pesq(dirty_wavs, clean_wavs):
     scores = []
     for i in range(len(dirty_wavs)):
-        pesq = run_pesq_waveforms(dirty_wavs[i], clean_wavs[i])
-        scores.append(pesq)
+        try:
+            pesq = run_pesq_waveforms(dirty_wavs[i], clean_wavs[i])
+            scores.append(pesq)
+        except:
+            scores.append(1.0)
     return scores
 
 

@@ -18,7 +18,7 @@ source_data_dir_raw = "raw/audio_txt_files/"
 noise_data_dir_raw = "noise/"
 target_dir = "./processed/"
 sample_rate = 8000
-desired_length = 7
+desired_length = 3
 lf = 10
 hf = 2000
 
@@ -222,15 +222,15 @@ for idx, f in enumerate(tqdm(wavfiles_raw)):
     split_data = split_and_pad([sample], desired_length, sample_rate)
 
 
-    for i in range(len(split_data)-1,0,-1):
-        wav_data = split_data[i]
-        clean_wav = wav_data.astype(np.double)
-
-        try:
-            pesq(ref=clean_wav, deg=clean_wav, mode='nb', fs=sample_rate)
-        except Exception as e:
-            print(f"{e}")
-            del split_data[i]
+    # for i in range(len(split_data)-1,0,-1):
+    #     wav_data = split_data[i]
+    #     clean_wav = wav_data.astype(np.double)
+    #
+    #     try:
+    #         pesq(ref=clean_wav, deg=clean_wav, mode='nb', fs=sample_rate)
+    #     except Exception as e:
+    #         print(f"{e}")
+    #         del split_data[i]
 
 
     input_target = np.array(split_data)
