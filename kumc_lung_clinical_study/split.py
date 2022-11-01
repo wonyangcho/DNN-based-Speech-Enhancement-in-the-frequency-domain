@@ -15,8 +15,8 @@ from torchmetrics.audio.pesq import PerceptualEvaluationSpeechQuality
 import torch
 
 
-source_data_dir_raw = "./raw/audio_txt_files/"
-noise_data_dir_raw = "./noise/"
+source_data_dir_raw = "raw/audio_txt_files/"
+noise_data_dir_raw = "noise/"
 target_dir = "./processed/"
 sample_rate = 8000
 desired_length = 7

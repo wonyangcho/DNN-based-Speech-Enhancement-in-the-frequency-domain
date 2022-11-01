@@ -69,29 +69,23 @@ def run_pesq_waveforms(dirty_wav, clean_wav):
     clean_wav = clean_wav.astype(np.double)
     dirty_wav = dirty_wav.astype(np.double)
 
-    #return pesq(clean_wav, dirty_wav, mode='nb', fs=8000)
+    return pesq(clean_wav, dirty_wav, mode='nb', fs=8000)
 
     #수정 아래 내용
-    try:
-        return pesq_dll.pesq(ctypes.c_void_p(clean_wav.ctypes.data),
-                             ctypes.c_void_p(dirty_wav.ctypes.data),
-                             len(clean_wav),
-                             len(dirty_wav))
-    except:
-        raise ValueError
+
+    # return pesq_dll.pesq(ctypes.c_void_p(clean_wav.ctypes.data),
+    #                      ctypes.c_void_p(dirty_wav.ctypes.data),
+    #                      len(clean_wav),
+    #                      len(dirty_wav))
+
 
 
 # interface to PESQ evaluation, taking in two waveforms as input
 def cal_pesq(dirty_wavs, clean_wavs):
     scores = []
     for i in range(len(dirty_wavs)):
-        try:
-            pesq = run_pesq_waveforms(dirty_wavs[i], clean_wavs[i])
-            scores.append(pesq)
-        except Exception as e:
-            #pass   #아래 수정
-            print(f"{e}")
-            scores.append(1.0)
+        pesq = run_pesq_waveforms(dirty_wavs[i], clean_wavs[i])
+        scores.append(pesq)
     return scores
 
 
