@@ -38,13 +38,13 @@ class Wave_Dataset(Dataset):
             self.mode = 'train'
             print('<Training dataset>')
             print('Load the data...')
-            self.input_path = "DATASET_FILE_PATH"
+            self.input_path = "/work/project/DNN-based-Speech-Enhancement-in-the-frequency-domain/kumc_lung_clinical_study/train.npy"
             self.input = np.load(self.input_path)
         elif mode == 'valid':
             self.mode = 'valid'
             print('<Validation dataset>')
             print('Load the data...')
-            self.input_path = "DATASET_FILE_PATH"
+            self.input_path =  "/work/project/DNN-based-Speech-Enhancement-in-the-frequency-domain/kumc_lung_clinical_study/val.npy"
             self.input = np.load(self.input_path)
             # # if you want to use a part of the dataset
             # self.input = self.input[:500]
@@ -52,7 +52,7 @@ class Wave_Dataset(Dataset):
             self.mode = 'test'
             print('<Test dataset>')
             print('Load the data...')
-            self.input_path = "DATASET_FILE_PATH"
+            self.input_path =  "/work/project/DNN-based-Speech-Enhancement-in-the-frequency-domain/kumc_lung_clinical_study/test.npy"
 
             self.input = np.load(self.input_path)
             self.input = self.input[type][snr]

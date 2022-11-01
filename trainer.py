@@ -218,7 +218,7 @@ def model_validate(model, validation_loader, writer, dir_to_save, epoch, DEVICE)
             stoi = cal_stoi(estimated_wavs, clean_wavs)
 
             # pesq: 0.1 better / stoi: 0.01 better
-            for i in range(len(pesq)):
+            for i in range(len(stoi)):
                 f_score.write('PESQ {:.6f} | STOI {:.6f}\n'.format(pesq[i], stoi[i]))
 
             # reshape for sum
@@ -227,6 +227,8 @@ def model_validate(model, validation_loader, writer, dir_to_save, epoch, DEVICE)
 
             avg_pesq += sum(pesq[0]) / len(inputs)
             avg_stoi += sum(stoi[0]) / len(inputs)
+
+
 
         # save the samples to tensorboard
         if epoch % 10 == 0:

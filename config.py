@@ -58,7 +58,8 @@ ola_ratio = 0.75
 fft_len = 512
 sam_sec = fft_len / fs
 frm_samp = fs * (fft_len / fs)
-window = 'hanning'
+#window = 'hanning' #수정
+window = 'hann'
 
 # for DCCRN
 rnn_layers = 2
