@@ -14,11 +14,11 @@ from tqdm import tqdm
 from pesq import pesq
 
 
-noisy_data_dir_raw = "noisy/"
-clean_data_dir_raw = "clean/"
+source_data_dir_raw = "raw/audio_txt_files/"
+noise_data_dir_raw = "noise/"
 target_dir = "./processed/"
 sample_rate = 8000
-desired_length = 7
+desired_length = 3
 lf = 10
 hf = 2000
 
@@ -213,7 +213,7 @@ def wav2npy(wavefiles, postfix, only_train) :
 
     for idx, f in enumerate(tqdm(wavfiles_raw)):
         sample, rate = librosa.load(f, sr=sample_rate)
-        #sample = butter_bandpass_filter(sample, fs=rate, lowcut=lf, highcut=hf)
+        sample = butter_bandpass_filter(sample, fs=rate, lowcut=lf, highcut=hf)
         split_data = split_and_pad([sample], desired_length, sample_rate)
 
         # for i in range(len(split_data)-1,0,-1):
@@ -270,13 +270,17 @@ def wav2npy(wavefiles, postfix, only_train) :
             np.save(f'./val_{postfix}.npy', val_audio_data)
             np.save(f'./test_{postfix}.npy', test_audio_data)
 
+wavfiles_raw = glob(source_data_dir_raw + '/*/*.wav')
+wavfiles_raw.extend(glob(source_data_dir_raw + '/*/*/*.wav'))
+wavfiles_raw.extend(glob(source_data_dir_raw + '/*.wav'))
 
 
 random.seed(20221031)
-wavfiles_raw = glob(noisy_data_dir_raw + '*.wav')
+
 wav2npy(wavfiles_raw, "noisy", False)
 
-wavfiles_raw = glob(clean_data_dir_raw + '/*.wav')
-wav2npy(wavfiles_raw, "clean",False)
+wavfiles_raw = glob(noise_data_dir_raw + '/*.wav')
+
+wav2npy(wavfiles_raw, "noise",True)
 
 
