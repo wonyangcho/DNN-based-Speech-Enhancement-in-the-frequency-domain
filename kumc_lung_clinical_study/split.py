@@ -14,11 +14,11 @@ from tqdm import tqdm
 from pesq import pesq
 
 
-source_data_dir_raw = "raw/audio_txt_files/"
-noise_data_dir_raw = "noise/"
+noisy_data_dir_raw = "noisy/"
+clean_data_dir_raw = "clean/"
 target_dir = "./processed/"
 sample_rate = 8000
-desired_length = 3
+desired_length = 7
 lf = 10
 hf = 2000
 
@@ -198,68 +198,85 @@ def split_and_pad(original, desired_length, sample_rate, types=0):
     return output
 
 
-wavfiles_raw = glob(source_data_dir_raw + '/*/*.wav')
-wavfiles_raw.extend(glob(source_data_dir_raw + '/*/*/*.wav'))
-wavfiles_raw.extend(glob(source_data_dir_raw + '/*.wav'))
-wavfiles_raw.extend(glob(noise_data_dir_raw + '/*.wav'))
+def wav2npy(wavefiles, postfix, only_train) :
+    random.shuffle(wavfiles_raw)
+
+    data_len = len(wavfiles_raw)
+
+    train_data_len = int(data_len * 0.7)
+    valid_data_len = train_data_len + int(data_len * 0.2)
+    test_data_len = valid_data_len + int(data_len * 0.1)
+
+    train_audio_data = None
+    val_audio_data = None
+    test_audio_data = None
+
+    for idx, f in enumerate(tqdm(wavfiles_raw)):
+        sample, rate = librosa.load(f, sr=sample_rate)
+        #sample = butter_bandpass_filter(sample, fs=rate, lowcut=lf, highcut=hf)
+        split_data = split_and_pad([sample], desired_length, sample_rate)
+
+        # for i in range(len(split_data)-1,0,-1):
+        #     wav_data = split_data[i]
+        #     clean_wav = wav_data.astype(np.double)
+        #
+        #     try:
+        #         pesq(ref=clean_wav, deg=clean_wav, mode='nb', fs=sample_rate)
+        #     except Exception as e:
+        #         print(f"{e}")
+        #         del split_data[i]
+
+        input_target = np.array(split_data)
+        input_target = np.expand_dims(input_target, axis=1)
+        input_target = np.append(input_target, input_target, axis=1)
+
+        if only_train == True:
+            if train_audio_data is not None:
+                train_audio_data = np.concatenate((train_audio_data, input_target), axis=0)
+            else:
+                train_audio_data = input_target
+
+
+
+        else:
+
+            if idx < train_data_len:
+                if train_audio_data is not None:
+                    train_audio_data = np.concatenate((train_audio_data, input_target), axis=0)
+                else:
+                    train_audio_data = input_target
+            elif idx < valid_data_len:
+                if val_audio_data is not None:
+                    val_audio_data = np.concatenate((val_audio_data, input_target), axis=0)
+                else:
+                    val_audio_data = input_target
+            else:
+                if test_audio_data is not None:
+                    test_audio_data = np.concatenate((test_audio_data, input_target), axis=0)
+                else:
+                    test_audio_data = input_target
+
+    if only_train == True:
+        print(train_audio_data.shape)
+
+        np.save(f'./train_{postfix}.npy', train_audio_data)
+    else:
+
+            print(train_audio_data.shape)
+            print(val_audio_data.shape)
+            print(test_audio_data.shape)
+
+            np.save(f'./train_{postfix}.npy', train_audio_data)
+            np.save(f'./val_{postfix}.npy', val_audio_data)
+            np.save(f'./test_{postfix}.npy', test_audio_data)
+
+
 
 random.seed(20221031)
-random.shuffle(wavfiles_raw)
+wavfiles_raw = glob(noisy_data_dir_raw + '*.wav')
+wav2npy(wavfiles_raw, "noisy", False)
 
-data_len = len(wavfiles_raw)
-
-train_data_len = int(data_len*0.7)
-valid_data_len = train_data_len+int(data_len*0.2)
-test_data_len = valid_data_len+int(data_len*0.1)
-
-train_audio_data = None
-val_audio_data = None
-test_audio_data = None
-
-for idx, f in enumerate(tqdm(wavfiles_raw)):
-    sample, rate = librosa.load(f, sr=sample_rate)
-    sample = butter_bandpass_filter(sample, fs=rate, lowcut=lf, highcut=hf)
-    split_data = split_and_pad([sample], desired_length, sample_rate)
+wavfiles_raw = glob(clean_data_dir_raw + '/*.wav')
+wav2npy(wavfiles_raw, "clean",False)
 
 
-    # for i in range(len(split_data)-1,0,-1):
-    #     wav_data = split_data[i]
-    #     clean_wav = wav_data.astype(np.double)
-    #
-    #     try:
-    #         pesq(ref=clean_wav, deg=clean_wav, mode='nb', fs=sample_rate)
-    #     except Exception as e:
-    #         print(f"{e}")
-    #         del split_data[i]
-
-
-    input_target = np.array(split_data)
-    input_target = np.expand_dims(input_target, axis=1)
-    input_target = np.append(input_target,input_target,axis=1)
-
-    if idx < train_data_len:
-        if train_audio_data is not None:
-            train_audio_data = np.concatenate((train_audio_data,input_target),axis=0)
-        else:
-            train_audio_data = input_target
-    elif idx < valid_data_len:
-        if val_audio_data is not None:
-            val_audio_data = np.concatenate((val_audio_data, input_target), axis=0)
-        else:
-            val_audio_data = input_target
-    else:
-        if test_audio_data is not None:
-            test_audio_data = np.concatenate((test_audio_data, input_target), axis=0)
-        else:
-            test_audio_data = input_target
-
-
-
-
-print(train_audio_data.shape)
-print(val_audio_data.shape)
-print(test_audio_data.shape)
-
-np.save('./train.npy', train_audio_data)
-np.save('./val.npy', val_audio_data)
-np.save('./test.npy', test_audio_data)
