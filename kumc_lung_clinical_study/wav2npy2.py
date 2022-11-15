@@ -263,9 +263,9 @@ def wav2npy(wavefiles, postfix) :
     print(val_audio_data.shape)
     print(test_audio_data.shape)
 
-    np.save(f'./train_{postfix}.npy', train_audio_data)
-    np.save(f'./val_{postfix}.npy', val_audio_data)
-    np.save(f'./test_{postfix}.npy', test_audio_data)
+    np.save(f'./train.npy', train_audio_data)
+    np.save(f'./val.npy', val_audio_data)
+    np.save(f'./test.npy', test_audio_data)
 
 
 
