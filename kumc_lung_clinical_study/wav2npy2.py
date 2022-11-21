@@ -18,59 +18,12 @@ noisy_data_dir_raw = "noisy/"
 clean_data_dir_raw = "clean/"
 target_dir = "./processed/"
 sample_rate = 8000
-desired_length = 7
+desired_length = 3
 lf = 10
 hf = 2000
 
 
-def initLogger():
-    """
 
-    :return:
-    """
-    global myLogger
-    # 현재 파일 경로 및 파일명 찾기
-    current_dir = os.path.dirname(os.path.realpath(__file__))
-    current_file = os.path.basename(__file__)
-    current_file_name = current_file[:-3]  # xxxx.py
-    LOG_FILENAME = 'log-{}'.format(current_file_name)
-
-    # 로그 저장할 폴더 생성
-    log_dir = '{}/logs'.format(current_dir)
-    os.makedirs(log_dir, exist_ok=True)
-
-    # 로거 생성
-    LOG_FILENAME = "skeeperweb.log"
-    MY_LOG_FILE_PATH = f"{log_dir}/{LOG_FILENAME}"
-    logging.basicConfig(filename=MY_LOG_FILE_PATH)
-    myLogger = logging.getLogger(LOG_FILENAME)  # 로거 이름: test
-    myLogger.setLevel(logging.DEBUG)  # 로깅 수준: DEBUG
-
-    LOG_FILE_MAX_BYTES = 50 * 1024 * 1024  # 50MB
-
-    file_handler = handlers.RotatingFileHandler(MY_LOG_FILE_PATH, maxBytes=LOG_FILE_MAX_BYTES, backupCount=10)
-
-    formatter = logging.Formatter('%(asctime)s - %(levelname)s - [%(filename)s:%(lineno)d] %(message)s')
-    file_handler.setFormatter(formatter)  # 핸들러에 로깅 포맷 할당
-    myLogger.addHandler(file_handler)  # 로거에 핸들러 추가
-    myLogger.propagate = False
-
-
-def error_log(level, error_str):
-    """
-
-    :param level:
-    :param error_str:
-    :return:
-    """
-    global myLogger
-
-    if level == logging.INFO:
-        myLogger.info("{}".format(error_str))
-    if level == logging.DEBUG:
-        myLogger.debug("{}".format(error_str))
-    if level == logging.ERROR:
-        myLogger.error("{}".format(error_str))
 
 
 def butter_bandpass(lowcut, highcut, fs, order=5):
