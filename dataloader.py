@@ -2,6 +2,7 @@ import torch
 import numpy as np
 from torch.utils.data import Dataset, DataLoader
 import config as cfg
+from tools_for_dataset import *
 
 # # If you don't set the data type to object when saving the data... 
 # np_load_old = np.load
@@ -69,3 +70,35 @@ class Wave_Dataset(Dataset):
         targets = torch.from_numpy(targets)
 
         return inputs, targets
+
+class WaveFile_Dataset(Dataset):
+    def __init__(self, mode):
+        # load data
+        if mode == 'train':
+            print('<Training dataset>')
+            print('Load the data...')
+            # load the wav addr
+            self.noisy_dirs = scan_directory(cfg.noisy_dirs_for_train)
+            self.clean_dirs = find_pair(self.noisy_dirs)
+
+        elif mode == 'valid':
+            print('<Validation dataset>')
+            print('Load the data...')
+            # load the wav addr
+            self.noisy_dirs = scan_directory(cfg.noisy_dirs_for_valid)
+            self.clean_dirs = find_pair(self.noisy_dirs)
+
+    def __len__(self):
+        return len(self.noisy_dirs)
+
+    def __getitem__(self, idx):
+        # read the wav
+        inputs = addr2wav(self.noisy_dirs[idx])
+        targets = addr2wav(self.clean_dirs[idx])
+
+        # transform to torch from numpy
+        inputs = torch.from_numpy(inputs)
+        targets = torch.from_numpy(targets)
+
+        return inputs, targets
+
