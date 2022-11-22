@@ -18,7 +18,7 @@ noisy_data_dir_raw = "noisy/"
 clean_data_dir_raw = "clean/"
 target_dir = "./processed/"
 sample_rate = 8000
-desired_length = 7
+desired_length = 3
 lf = 10
 hf = 2000
 
