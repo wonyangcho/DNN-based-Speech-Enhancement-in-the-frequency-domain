@@ -10,7 +10,7 @@ you have to change this file.
 #######################################################################
 job_dir = './models/'
 logs_dir = './logs/'
-chkpt_model = "EXPERIMENT_NUMBER_11.21_DCCRN_SDR" #None  # 'FILE PATH (if you have pretrained model..)'
+chkpt_model = None  # 'FILE PATH (if you have pretrained model..)'
 chkpt = str("45")
 if chkpt_model is not None:
     chkpt_path = job_dir + chkpt_model + '/chkpt_' + chkpt + '.pt'
