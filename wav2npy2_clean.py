@@ -280,6 +280,7 @@ def wav2npy(lungWav, artiWav, dir_to_save) :
 
         noisy_name = lung.split('/')[-1].split('.')[0] + artiWav[random_idx].split('/')[-1].split('.')[0] + '_snr' + subname
         total_path = dir_to_save + '/' + noisy_name + '.wav'
+        clean_path = dir_to_save + '/' + lung.split('/')[-1]
         if sample_c.shape[0] > sample_n.shape[0]:
             sample_c = sample_c[:sample_n.shape[0]]
         else:
@@ -294,23 +295,31 @@ def wav2npy(lungWav, artiWav, dir_to_save) :
         target_c = np.expand_dims(target_c, axis=1)
         input_target = np.append(input_n, target_c, axis=1)
 
+        clean_target = np.append(target_c, target_c, axis=1)
+
 
         if idx < train_data_len:
             wav.write(total_path, 8000, sample_n)
+            wav.write(clean_path, 8000, sample_c)
             if train_audio_data is not None:
                 train_audio_data = np.concatenate((train_audio_data, input_target), axis=0)
+                train_audio_data = np.concatenate((train_audio_data, clean_target), axis=0)
             else:
                 train_audio_data = input_target
         elif idx < valid_data_len:
             wav.write(total_path.replace('train','valid'), 8000, sample_n)
+            wav.write(clean_path.replace('train','valid'), 8000, sample_c)
             if val_audio_data is not None:
                 val_audio_data = np.concatenate((val_audio_data, input_target), axis=0)
+                val_audio_data = np.concatenate((val_audio_data, clean_target), axis=0)
             else:
                 val_audio_data = input_target
         else:
             wav.write(total_path.replace('train','test'), 8000, sample_n)
+            wav.write(clean_path.replace('train','test'), 8000, sample_c)
             if test_audio_data is not None:
                 test_audio_data = np.concatenate((test_audio_data, input_target), axis=0)
+                test_audio_data = np.concatenate((test_audio_data, clean_target), axis=0)
             else:
                 test_audio_data = input_target
 
@@ -325,9 +334,9 @@ def wav2npy(lungWav, artiWav, dir_to_save) :
     # np.save(f'/work/hyerim/dccrn/data_json/realnoise_test.npy', test_audio_data)
      
     # noisex92 data
-    np.save(f'/work/hyerim/NoiseNew/dataset/lung_train.npy', train_audio_data)
-    np.save(f'/work/hyerim/NoiseNew/dataset/lung_val.npy', val_audio_data)
-    np.save(f'/work/hyerim/NoiseNew/dataset/lung_test.npy', test_audio_data)
+    np.save(f'/work/hyerim/NoiseNew/dataset/lung_addclean_train.npy', train_audio_data)
+    np.save(f'/work/hyerim/NoiseNew/dataset/lung_addclean_val.npy', val_audio_data)
+    np.save(f'/work/hyerim/NoiseNew/dataset/lung_addclean_test.npy', test_audio_data)
 
 
 def main():
@@ -340,7 +349,7 @@ def main():
 
     lungWav = wheezWav + normWav + crackleWav
 
-    dir_to_save = '/work/hyerim/NoiseNew/dataset/train'
+    dir_to_save = '/work/hyerim/NoiseNew/dataset/addclean_train'
 
     # make the file directory
     if not os.path.exists(dir_to_save):
