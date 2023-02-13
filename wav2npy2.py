@@ -14,8 +14,8 @@ from tqdm import tqdm
 from pesq import pesq
 
 
-noisy_data_dir_raw = "noisy/"
-clean_data_dir_raw = "clean/"
+noisy_data_dir_raw = "kumc_lung_clinical_study/noisy/"
+clean_data_dir_raw = "kumc_lung_clinical_study/clean/"
 target_dir = "./processed/"
 sample_rate = 8000
 desired_length = 3
