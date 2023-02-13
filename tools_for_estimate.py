@@ -83,7 +83,8 @@ def cal_pesq(dirty_wavs, clean_wavs):
             pesq = run_pesq_waveforms(dirty_wavs[i], clean_wavs[i])
             scores.append(pesq)
         except:
-            scores.append(5.0)  #No utterance
+            continue    #No utterance는 포함시키지 않음
+            #scores.append(5.0)  #No utterance
     return scores
 
 

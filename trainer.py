@@ -219,7 +219,10 @@ def model_validate(model, validation_loader, writer, dir_to_save, epoch, DEVICE)
 
             # pesq: 0.1 better / stoi: 0.01 better
             for i in range(len(stoi)):
-                f_score.write('PESQ {:.6f} | STOI {:.6f}\n'.format(pesq[i], stoi[i]))
+                f_score.write('STOI {:.6f} | '.format(stoi[i]))
+
+            for i in range(len(pesq)):
+                f_score.write('PESQ {:.6f}\n'.format(pesq[i]))
 
             # reshape for sum
             pesq = np.reshape(pesq, (1, -1))
@@ -285,8 +288,11 @@ def model_perceptual_validate(model, validation_loader, writer, dir_to_save, epo
             stoi = cal_stoi(estimated_wavs, clean_wavs)
 
             # pesq: 0.1 better / stoi: 0.01 better
+            for i in range(len(stoi)):
+                f_score.write('STOI {:.6f} | '.format(stoi[i]))
+
             for i in range(len(pesq)):
-                f_score.write('PESQ {:.6f} | STOI {:.6f}\n'.format(pesq[i], stoi[i]))
+                f_score.write('PESQ {:.6f}\n'.format(pesq[i]))
 
             # reshape for sum
             pesq = np.reshape(pesq, (1, -1))
@@ -353,8 +359,11 @@ def fullsubnet_validate(model, validation_loader, writer, dir_to_save, epoch, DE
             stoi = cal_stoi(estimated_wavs, clean_wavs)
 
             # pesq: 0.1 better / stoi: 0.01 better
+            for i in range(len(stoi)):
+                f_score.write('STOI {:.6f} | '.format(stoi[i]))
+
             for i in range(len(pesq)):
-                f_score.write('PESQ {:.6f} | STOI {:.6f}\n'.format(pesq[i], stoi[i]))
+                f_score.write('PESQ {:.6f}\n'.format(pesq[i]))
 
             # reshape for sum
             pesq = np.reshape(pesq, (1, -1))
@@ -410,8 +419,11 @@ def dccrn_direct_validate(model, validation_loader, writer, dir_to_save, epoch, 
             stoi = cal_stoi(estimated_wavs, clean_wavs)
 
             # pesq: 0.1 better / stoi: 0.01 better
+            for i in range(len(stoi)):
+                f_score.write('STOI {:.6f} | '.format(stoi[i]))
+
             for i in range(len(pesq)):
-                f_score.write('PESQ {:.6f} | STOI {:.6f}\n'.format(pesq[i], stoi[i]))
+                f_score.write('PESQ {:.6f}\n'.format(pesq[i]))
 
             # reshape for sum
             pesq = np.reshape(pesq, (1, -1))
@@ -464,8 +476,11 @@ def crn_direct_validate(model, validation_loader, writer, dir_to_save, epoch, DE
             stoi = cal_stoi(estimated_wavs, clean_wavs)
 
             # pesq: 0.1 better / stoi: 0.01 better
+            for i in range(len(stoi)):
+                f_score.write('STOI {:.6f} | '.format(stoi[i]))
+
             for i in range(len(pesq)):
-                f_score.write('PESQ {:.6f} | STOI {:.6f}\n'.format(pesq[i], stoi[i]))
+                f_score.write('PESQ {:.6f}\n'.format(pesq[i]))
 
             # reshape for sum
             pesq = np.reshape(pesq, (1, -1))
