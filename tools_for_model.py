@@ -8,7 +8,30 @@ from scipy.signal import get_window
 import matplotlib.pylab as plt
 import config as cfg
 
+class TCNBlock(nn.Module):
+    def __init__(self, input_size, output_size, kernel_size=2, stride=1, dilation=1, dropout=0.2):
+        super(TCNBlock, self).__init__()
+        self.conv1 = nn.Conv1d(input_size, output_size, kernel_size, stride=stride, padding=(kernel_size-1)*dilation, dilation=dilation)
+        self.conv2 = nn.Conv1d(output_size, output_size, kernel_size, stride=stride, padding=(kernel_size-1)*dilation, dilation=dilation)
+        self.dropout = nn.Dropout(dropout)
+        
+    def forward(self, x):
+        out = F.relu(self.conv1(x))
+        out = self.dropout(out)
+        out = F.relu(self.conv2(out))
+        return self.dropout(out) + x
 
+class TCN(nn.Module):
+    def __init__(self, input_size, output_size, num_layers=8, kernel_size=2):
+        super(TCN, self).__init__()
+        layers = []
+        for i in range(num_layers):
+            dilation = 2 ** i
+            layers.append(TCNBlock(input_size, output_size, kernel_size, dilation=dilation))
+        self.network = nn.Sequential(*layers)
+
+    def forward(self, x):
+        return self.network(x)
 ############################################################################
 #                         for convolutional STFT                           #
 ############################################################################

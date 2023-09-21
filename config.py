@@ -33,7 +33,7 @@ DEVICE = 'cuda'  # if you want to run the code with 'cpu', change 'cpu'
 #                           current setting                           #
 #######################################################################
 model = model_list[0]
-loss = loss_list[1]
+loss = loss_list[2]
 perceptual = perceptual_list[0]
 lstm = lstm_type[1]
 sequence_model = main_net[0]
@@ -51,7 +51,7 @@ dccrn_kernel_num = [32, 64, 128, 256, 256, 256]
 #######################################################################
 #                         model information                           #
 #######################################################################
-fs = 8000
+fs = 16000
 win_len = 400
 win_inc = 100
 ola_ratio = 0.75
